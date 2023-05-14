@@ -1,7 +1,8 @@
-import os
 import numpy as np
 import pandas as pd
-def load_data(dirname: str) -> list[np.array]:
+import os
+import json
+def load_and_filter_data(dirname: str) -> list[np.array]:
     data = []
 
     files = [os.path.join(dirname, file) for file in os.listdir(dirname) if os.path.isfile(os.path.join(dirname, file))]
@@ -21,10 +22,11 @@ def load_data(dirname: str) -> list[np.array]:
         for line in content.split('\n'):
             if ('[' in line) and (']' in line):
                 try:
-                    
+                    arr = json.loads(line)
                     if isinstance(arr, list):
                         img = np.array(arr)
-                        if img.size != 101 or ((img[1:] == -1) | (img[1:] == 1)).sum() != 100:
+                        #filter images with incorrect or not enough info
+                        if img.size != 101 or ((img[1:] == -1) | (img[1:] == 1)).sum() != 100 or img[1:].sum() < -97 or img[1:].sum() >97 :
                             print("Error in: ", file)
                         else:
                             data.append(img)
@@ -34,3 +36,11 @@ def load_data(dirname: str) -> list[np.array]:
     print(len(data), " images loaded as data")
 
     return data
+def main():
+    Data = np.array(load_and_filter_data("data/data"))
+    Coloums = np.arange(len(Data[0]))
+    df = pd.DataFrame(Data,columns=Coloums)
+    df.to_csv("preproceesed_data")
+
+if __name__ == "__main__":
+    main()
