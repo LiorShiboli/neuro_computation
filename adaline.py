@@ -15,7 +15,8 @@ def adaline_training(answers,data_points,alpha,epochs):
 
     return (weights,bias)
 def main():
-    df = load_data("preproceesed_data")
+    datafile = input("datafile:")
+    df = load_data(datafile)
     while input("do you want to predict[Y/N]")=="Y":
         to_predict1= int(input("which number do you want to be 1 in the predicition "))
         to_predict0= int(input("which number do you want to be 0 in the predicition "))

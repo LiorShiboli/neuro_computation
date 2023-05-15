@@ -37,10 +37,10 @@ def load_and_filter_data(dirname: str) -> list[np.array]:
 
     return data
 def main():
-    Data = np.array(load_and_filter_data("data/data"))
+    Data = np.array(load_and_filter_data("noisy_data"))
     Coloums = np.arange(len(Data[0]))
     df = pd.DataFrame(Data,columns=Coloums)
-    df.to_csv("preproceesed_data")
+    df.to_csv("preproceesed_noisy_data")
 
 if __name__ == "__main__":
     main()
