@@ -27,14 +27,25 @@ def main():
         answers = df_relevant['0'].to_numpy()
         answers = (answers==to_predict1).astype(float)
         index = np.arange(len(answers))
+
+        test_accuracies =[]
+        train_accuracies =[]
         for i in range(5):
-            weights,bias = adaline_training(answers[index%5 !=i],data_points[index%5 !=i],0.01,10000)
+            weights,bias = adaline_training(answers[index%5 !=i],data_points[index%5 !=i],learning_rate,epochs)
             training_predictions = np.rint(np.dot(weights,data_points[index%5 !=i].T)+bias)
             test_predictions = np.rint(np.dot(weights,data_points[index%5 ==i].T)+bias)
             training_accuracy = (training_predictions == answers[index%5 !=i]).sum()/len(answers[index%5!=i])
             test_accuracy = (test_predictions == answers[index%5 ==i]).sum()/len(answers[index%5==i])
+            test_accuracies+= [test_accuracy]
+            train_accuracies += [training_accuracy]
             print("train accuracy = "+str(training_accuracy))
             print("test accuracy = "+str(test_accuracy))
+        
+        print("average(mean) train: "+str(np.mean(train_accuracies)))
+        print("standard deviation training:"+ str(np.std(train_accuracies)))
+        print("average(mean) test: "+str(np.mean(test_accuracies)))
+        print("standard deviation test:"+ str(np.std(test_accuracies)))
+        
 
 if __name__ == "__main__":
     main()
