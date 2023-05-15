@@ -19,13 +19,14 @@ def main():
     while input("do you want to predict[Y/N]")=="Y":
         to_predict1= int(input("which number do you want to be 1 in the predicition "))
         to_predict0= int(input("which number do you want to be 0 in the predicition "))
+        learning_rate = float(input("learning rate(suggested 0.01): "))
+        epochs = int(input("epochs(suggested 10000): "))
         df_relevant = df[df['0'].isin( [to_predict0,to_predict1])]
         df_relevant = df_relevant.sample(frac=1).reset_index(drop=True)
         data_points =  df_relevant.drop('0',axis=1).to_numpy()
         answers = df_relevant['0'].to_numpy()
-        answers = (answers==1).astype(float)
+        answers = (answers==to_predict1).astype(float)
         index = np.arange(len(answers))
-        
         for i in range(5):
             weights,bias = adaline_training(answers[index%5 !=i],data_points[index%5 !=i],0.01,10000)
             training_predictions = np.rint(np.dot(weights,data_points[index%5 !=i].T)+bias)
